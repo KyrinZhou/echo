@@ -3,7 +3,7 @@
 import { useQuery } from "convex/react";
 import { api } from "@workspace/backend/_generated/api";
 import { Authenticated, Unauthenticated } from "convex/react";
-import { SignInButton, UserButton } from "@clerk/nextjs";
+import { SignInButton, UserButton, OrganizationSwitcher } from "@clerk/nextjs";
 import { Button } from "@workspace/ui/components/button";
 
 export default function Page() {
@@ -12,15 +12,9 @@ export default function Page() {
     <div className="flex items-center justify-center min-h-svh">
       <div className="flex flex-col items-center justify-center gap-4">
         <h1 className="text-2xl font-bold">app/Web</h1>
-        <Authenticated>
-          <UserButton />
-          <pre>{JSON.stringify(users)}</pre>
-        </Authenticated>
-        <Unauthenticated>
-          <SignInButton>
-            <Button>Sign in</Button>
-          </SignInButton>
-        </Unauthenticated>
+        <UserButton />
+        <OrganizationSwitcher />
+        <pre>{JSON.stringify(users)}</pre>
       </div>
     </div>
   );
