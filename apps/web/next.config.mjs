@@ -5,6 +5,10 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: "/widget/_next/:path*",
+        destination: "https://echo-widget-pink.vercel.app/_next/:path*",
+      },
+      {
         source: "/widget",
         destination: "https://echo-widget-pink.vercel.app/",
       },
