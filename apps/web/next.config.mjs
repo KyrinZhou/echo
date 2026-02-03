@@ -2,6 +2,18 @@ import {withSentryConfig} from "@sentry/nextjs";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["@workspace/ui"],
+  async rewrites() {
+    return [
+      {
+        source: "/widget",
+        destination: "https://echo-widget-pink.vercel.app/",
+      },
+      {
+        source: "/widget/:path*",
+        destination: "https://echo-widget-pink.vercel.app/:path*",
+      },
+    ];
+  },
 }
 
 export default withSentryConfig(nextConfig, {
