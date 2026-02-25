@@ -25,11 +25,19 @@ This is a pnpm monorepo ("Echo") managed with Turborepo. It contains a voice AI 
 
 ### Required environment variables
 
-Both apps need `.env.local` files (gitignored):
+Both apps need `.env.local` files (gitignored). These are populated automatically from Cursor Cloud secrets:
 
 - `apps/web/.env.local`: `NEXT_PUBLIC_CONVEX_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`
 - `apps/widget/.env.local`: `NEXT_PUBLIC_CONVEX_URL`
 - Convex backend also needs `CLERK_JWT_ISSUER_DOMAIN` (set in Convex dashboard)
+
+To create `.env.local` files from environment variables:
+```bash
+printf 'NEXT_PUBLIC_CONVEX_URL=%s\nNEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=%s\nCLERK_SECRET_KEY=%s\n' \
+  "$NEXT_PUBLIC_CONVEX_URL" "$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" "$CLERK_SECRET_KEY" \
+  > apps/web/.env.local
+printf 'NEXT_PUBLIC_CONVEX_URL=%s\n' "$NEXT_PUBLIC_CONVEX_URL" > apps/widget/.env.local
+```
 
 ### Gotchas
 
@@ -38,3 +46,5 @@ Both apps need `.env.local` files (gitignored):
 - **Web app requires valid Clerk keys**: The web app's Clerk middleware validates the publishable key on every request. Without real Clerk credentials, even dev mode returns 500. The widget app does not require Clerk.
 - **Production build requires Clerk**: `next build` for web fails during static generation without valid Clerk keys (needed at build time for pages using `ClerkProvider`).
 - **Convex backend**: `convex dev` requires a Convex project connection. Use `npx convex dev` to set up a new project or link to an existing one.
+- **Root URL redirects**: The web app's Clerk middleware protects all routes except `/sign-in` and `/sign-up`. Unauthenticated requests to `/` redirect to `/sign-in`.
+- **Sentry build warning**: The web build may warn about missing `SENTRY_AUTH_TOKEN` for source map uploads. This is non-blocking; set `SENTRY_AUTH_TOKEN=""` to suppress if needed.
