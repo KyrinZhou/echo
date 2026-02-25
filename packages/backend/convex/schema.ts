@@ -20,4 +20,11 @@ export default defineSchema({
     role: v.union(v.literal("assistant"), v.literal("user")),
     text: v.string(),
   }).index("by_conversation", ["conversationId"]),
+  files: defineTable({
+    title: v.string(),
+    description: v.optional(v.string()),
+    type: v.union(v.literal("article"), v.literal("faq"), v.literal("document")),
+    status: v.union(v.literal("active"), v.literal("archived")),
+    content: v.string(),
+  }),
 });
