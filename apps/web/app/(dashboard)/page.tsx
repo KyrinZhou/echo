@@ -12,7 +12,13 @@ export default function Page() {
       <div className="flex flex-col items-center justify-center gap-4 w-full">
         <YouTubePlayer url="https://www.youtube.com/watch?v=18r256G0zPY" />
         <Button asChild>
-          <a href="/widget">Open Widget</a>
+          <a
+            href="http://localhost:5091/widget"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open Widget
+          </a>
         </Button>
       </div>
     </div>

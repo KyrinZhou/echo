@@ -17,7 +17,7 @@ import {
   SidebarGroupLabel,
   SidebarGroupContent,
 } from "@workspace/ui/components/sidebar";
-import { InboxIcon, LibraryBigIcon } from "lucide-react";
+import { InboxIcon, LibraryBigIcon, BotIcon, ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -93,6 +93,24 @@ export const DashboardSidebar = () => {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Tools</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="Voice Widget">
+                <a
+                  href="http://localhost:5091/widget"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <BotIcon className="size-4" />
+                  <span>Voice Widget</span>
+                  <ExternalLinkIcon className="ml-auto size-3 text-muted-foreground" />
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
