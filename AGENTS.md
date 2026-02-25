@@ -48,3 +48,4 @@ printf 'NEXT_PUBLIC_CONVEX_URL=%s\n' "$NEXT_PUBLIC_CONVEX_URL" > apps/widget/.en
 - **Convex backend**: `convex dev` requires a Convex project connection. Use `npx convex dev` to set up a new project or link to an existing one.
 - **Root URL redirects**: The web app's Clerk middleware protects all routes except `/sign-in` and `/sign-up`. Unauthenticated requests to `/` redirect to `/sign-in`.
 - **Sentry build warning**: The web build may warn about missing `SENTRY_AUTH_TOKEN` for source map uploads. This is non-blocking; set `SENTRY_AUTH_TOKEN=""` to suppress if needed.
+- **Stale `.next` cache after builds**: Running `pnpm --filter web build` (production build) then `pnpm --filter web dev` can cause `Cannot find module './vendor-chunks/...'` errors because the dev server picks up stale production webpack chunks. Fix: `rm -rf apps/web/.next` before restarting the dev server.
