@@ -30,6 +30,7 @@ Both apps need `.env.local` files (gitignored). These are populated automaticall
 - `apps/web/.env.local`: `NEXT_PUBLIC_CONVEX_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`
 - `apps/widget/.env.local`: `NEXT_PUBLIC_CONVEX_URL`
 - Convex backend also needs `CLERK_JWT_ISSUER_DOMAIN` (set in Convex dashboard)
+- **Clerk mode**: Production keys start with `pk_live_`/`sk_live_`; dev keys start with `pk_test_`/`sk_test_`. The "Development mode" badge on sign-in only disappears with production keys. When switching Clerk instances, update keys in Cursor Cloud secrets, Vercel project env vars, and the Convex `CLERK_JWT_ISSUER_DOMAIN` (the issuer domain changes between dev/prod instances).
 
 To create `.env.local` files from environment variables:
 ```bash
