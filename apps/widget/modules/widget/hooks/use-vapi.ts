@@ -19,9 +19,12 @@ export const useVapi = () => {
 
     vapiInstance.on("call-start", () => {
       setIsConnected(true);
+      setIsConecting(false);
     });
     vapiInstance.on("call-end", () => {
       setIsConnected(false);
+      setIsConecting(false);
+      setIsSpeaking(false);
     });
     vapiInstance.on("speech-start", () => {
       setIsSpeaking(true);
