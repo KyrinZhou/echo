@@ -17,13 +17,14 @@ import {
   MoonIcon,
   SunIcon,
   ShieldIcon,
+  GlobeIcon,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useOrganization } from "@clerk/nextjs";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type Locale } from "@/lib/i18n";
 
 export default function SettingsPage() {
-  const { t } = useI18n();
+  const { t, locale, setLocale } = useI18n();
   const { theme, setTheme } = useTheme();
   const { organization } = useOrganization();
 
@@ -102,6 +103,37 @@ export default function SettingsPage() {
               <span className="inline-block size-2 rounded-full bg-green-400" />
               <span className="text-sm">{t.settings.statusActive}</span>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <GlobeIcon className="size-4" />
+            <CardTitle className="text-base">{t.settings.language}</CardTitle>
+          </div>
+          <CardDescription>{t.settings.languageDescription}</CardDescription>
+        </CardHeader>
+        <Separator />
+        <CardContent className="pt-4">
+          <div className="flex gap-2">
+            {([
+              { value: "en" as Locale, label: t.settings.english },
+              { value: "zh" as Locale, label: t.settings.chinese },
+            ]).map((lang) => (
+              <button
+                key={lang.value}
+                onClick={() => setLocale(lang.value)}
+                className={`inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium transition-colors ${
+                  locale === lang.value
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-input bg-background hover:bg-accent hover:text-accent-foreground"
+                }`}
+              >
+                {lang.label}
+              </button>
+            ))}
           </div>
         </CardContent>
       </Card>

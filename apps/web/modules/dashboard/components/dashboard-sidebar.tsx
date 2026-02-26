@@ -22,9 +22,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useI18n } from "@/lib/i18n";
 
 export const DashboardSidebar = () => {
   const pathname = usePathname();
+  const { t } = useI18n();
 
   const isActive = (url: string) => {
     if (url === "/") return pathname === "/";
@@ -32,16 +34,16 @@ export const DashboardSidebar = () => {
   };
 
   const mainItems = [
-    { title: "Dashboard", url: "/", icon: LayoutDashboardIcon },
+    { title: t.sidebar.dashboard, url: "/", icon: LayoutDashboardIcon },
   ];
 
   const supportItems = [
-    { title: "Conversations", url: "/conversations", icon: InboxIcon },
-    { title: "Knowledge Base", url: "/files", icon: LibraryBigIcon },
+    { title: t.sidebar.conversations, url: "/conversations", icon: InboxIcon },
+    { title: t.sidebar.knowledgeBase, url: "/files", icon: LibraryBigIcon },
   ];
 
   const bottomItems = [
-    { title: "Settings", url: "/settings", icon: SettingsIcon },
+    { title: t.sidebar.settings, url: "/settings", icon: SettingsIcon },
   ];
 
   return (
@@ -77,7 +79,7 @@ export const DashboardSidebar = () => {
         <SidebarGroup>
           <SidebarGroupContent>
             {mainItems.map((item) => (
-              <SidebarMenuItem key={item.title}>
+              <SidebarMenuItem key={item.url}>
                 <SidebarMenuButton
                   asChild
                   tooltip={item.title}
@@ -94,10 +96,10 @@ export const DashboardSidebar = () => {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Customer Support</SidebarGroupLabel>
+          <SidebarGroupLabel>{t.sidebar.customerSupport}</SidebarGroupLabel>
           <SidebarGroupContent>
             {supportItems.map((item) => (
-              <SidebarMenuItem key={item.title}>
+              <SidebarMenuItem key={item.url}>
                 <SidebarMenuButton
                   asChild
                   tooltip={item.title}
@@ -116,7 +118,7 @@ export const DashboardSidebar = () => {
         <SidebarGroup>
           <SidebarGroupContent>
             {bottomItems.map((item) => (
-              <SidebarMenuItem key={item.title}>
+              <SidebarMenuItem key={item.url}>
                 <SidebarMenuButton
                   asChild
                   tooltip={item.title}
