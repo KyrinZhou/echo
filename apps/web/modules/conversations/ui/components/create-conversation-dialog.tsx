@@ -16,8 +16,10 @@ import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { PlusIcon } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export function CreateConversationDialog() {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [customerName, setCustomerName] = useState("");
@@ -45,43 +47,43 @@ export function CreateConversationDialog() {
       <DialogTrigger asChild>
         <Button>
           <PlusIcon />
-          New Conversation
+          {t.conversations.newConversation}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New Conversation</DialogTitle>
+          <DialogTitle>{t.conversations.newConversation}</DialogTitle>
           <DialogDescription>
-            Start a new customer support conversation.
+            {t.conversations.startNew}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title">{t.conversations.titleLabel}</Label>
             <Input
               id="title"
-              placeholder="e.g. Account inquiry"
+              placeholder={t.conversations.titlePlaceholder}
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="customerName">Customer Name</Label>
+            <Label htmlFor="customerName">{t.conversations.customerName}</Label>
             <Input
               id="customerName"
-              placeholder="e.g. John Doe"
+              placeholder={t.conversations.customerNamePlaceholder}
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
               required
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Label htmlFor="customerEmail">Customer Email (optional)</Label>
+            <Label htmlFor="customerEmail">{t.conversations.customerEmail}</Label>
             <Input
               id="customerEmail"
               type="email"
-              placeholder="e.g. john@example.com"
+              placeholder={t.conversations.customerEmailPlaceholder}
               value={customerEmail}
               onChange={(e) => setCustomerEmail(e.target.value)}
             />
@@ -92,10 +94,10 @@ export function CreateConversationDialog() {
               variant="outline"
               onClick={() => setOpen(false)}
             >
-              Cancel
+              {t.common.cancel}
             </Button>
             <Button type="submit" disabled={!title.trim() || !customerName.trim()}>
-              Create
+              {t.common.create}
             </Button>
           </DialogFooter>
         </form>

@@ -24,8 +24,10 @@ import {
   XIcon,
   MessageCircleIcon,
 } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export function FloatingWidget() {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const {
     isConnected,
@@ -49,9 +51,9 @@ export function FloatingWidget() {
                   <BotIcon className="size-4" />
                 </div>
                 <div>
-                  <CardTitle className="text-sm">Echo Assistant</CardTitle>
+                  <CardTitle className="text-sm">{t.widget.echoAssistant}</CardTitle>
                   <p className="text-muted-foreground text-[11px]">
-                    AI-powered voice support
+                    {t.widget.aiPoweredSupport}
                   </p>
                 </div>
               </div>
@@ -76,10 +78,10 @@ export function FloatingWidget() {
                     }`}
                   />
                   {isConnected
-                    ? "Connected"
+                    ? t.widget.connected
                     : isConecting
-                      ? "Connecting"
-                      : "Offline"}
+                      ? t.widget.connecting
+                      : t.widget.offline}
                 </Badge>
                 <Button
                   variant="ghost"
@@ -104,7 +106,7 @@ export function FloatingWidget() {
                       <>
                         <Loader2Icon className="size-7 text-muted-foreground animate-spin" />
                         <p className="text-xs text-muted-foreground">
-                          Connecting to assistant…
+                          {t.widget.connectingToAssistant}
                         </p>
                       </>
                     ) : isConnected ? (
@@ -118,7 +120,7 @@ export function FloatingWidget() {
                           )}
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          {isSpeaking ? "Listening…" : "Start speaking…"}
+                          {isSpeaking ? t.widget.listening : t.widget.startSpeaking}
                         </p>
                       </>
                     ) : (
@@ -127,8 +129,7 @@ export function FloatingWidget() {
                           <PhoneIcon className="size-5 text-muted-foreground" />
                         </div>
                         <p className="text-xs text-muted-foreground max-w-[200px]">
-                          Click the button below to start a voice conversation
-                          with the AI assistant.
+                          {t.widget.idlePrompt}
                         </p>
                       </>
                     )}
@@ -147,7 +148,7 @@ export function FloatingWidget() {
                               : "bg-muted"
                           }`}
                         >
-                          {msg.role === "assistant" ? "AI" : "You"}
+                          {msg.role === "assistant" ? t.widget.ai : t.widget.you}
                         </AvatarFallback>
                       </Avatar>
                       <div
@@ -166,7 +167,7 @@ export function FloatingWidget() {
                   <div className="flex gap-2">
                     <Avatar className="size-6 shrink-0 mt-0.5">
                       <AvatarFallback className="text-[9px] bg-primary text-primary-foreground">
-                        AI
+                        {t.widget.ai}
                       </AvatarFallback>
                     </Avatar>
                     <div className="rounded-lg rounded-tl-sm bg-muted px-2.5 py-1.5">
@@ -192,7 +193,7 @@ export function FloatingWidget() {
                 onClick={startCall}
               >
                 <PhoneIcon className="size-3.5" />
-                Start Conversation
+                {t.widget.startConversation}
               </Button>
             ) : (
               <div className="flex items-center gap-3">
@@ -200,17 +201,17 @@ export function FloatingWidget() {
                   {isSpeaking ? (
                     <>
                       <MicIcon className="size-3.5 text-primary animate-pulse" />
-                      <span>Listening</span>
+                      <span>{t.widget.listening}</span>
                     </>
                   ) : isConecting ? (
                     <>
                       <Loader2Icon className="size-3.5 animate-spin" />
-                      <span>Connecting</span>
+                      <span>{t.widget.connecting}</span>
                     </>
                   ) : (
                     <>
                       <MicOffIcon className="size-3.5" />
-                      <span>On call</span>
+                      <span>{t.widget.onCall}</span>
                     </>
                   )}
                 </div>

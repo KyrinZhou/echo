@@ -20,17 +20,19 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useOrganization } from "@clerk/nextjs";
+import { useI18n } from "@/lib/i18n";
 
 export default function SettingsPage() {
+  const { t } = useI18n();
   const { theme, setTheme } = useTheme();
   const { organization } = useOrganization();
 
   return (
     <div className="flex flex-col gap-6 p-6 flex-1 max-w-3xl">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t.settings.title}</h1>
         <p className="text-muted-foreground text-sm">
-          Configure your Echo platform preferences.
+          {t.settings.description}
         </p>
       </div>
 
@@ -38,26 +40,26 @@ export default function SettingsPage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <ShieldIcon className="size-4" />
-            <CardTitle className="text-base">Organization</CardTitle>
+            <CardTitle className="text-base">{t.settings.organization}</CardTitle>
           </div>
-          <CardDescription>Your current organization details.</CardDescription>
+          <CardDescription>{t.settings.organizationDescription}</CardDescription>
         </CardHeader>
         <Separator />
         <CardContent className="pt-4 space-y-4">
           <div className="flex flex-col gap-2">
-            <Label>Organization Name</Label>
-            <Input value={organization?.name || "—"} disabled />
+            <Label>{t.settings.organizationName}</Label>
+            <Input value={organization?.name || t.common.noData} disabled />
           </div>
           <div className="flex flex-col gap-2">
-            <Label>Organization ID</Label>
+            <Label>{t.settings.organizationId}</Label>
             <Input
-              value={organization?.id || "—"}
+              value={organization?.id || t.common.noData}
               disabled
               className="font-mono text-xs"
             />
           </div>
           <div className="flex items-center gap-2">
-            <Label>Members</Label>
+            <Label>{t.settings.members}</Label>
             <Badge variant="secondary">
               {organization?.membersCount || 0}
             </Badge>
@@ -69,16 +71,16 @@ export default function SettingsPage() {
         <CardHeader>
           <div className="flex items-center gap-2">
             <BotIcon className="size-4" />
-            <CardTitle className="text-base">AI Assistant</CardTitle>
+            <CardTitle className="text-base">{t.settings.aiAssistant}</CardTitle>
           </div>
           <CardDescription>
-            Voice assistant configuration powered by Vapi.
+            {t.settings.aiAssistantDescription}
           </CardDescription>
         </CardHeader>
         <Separator />
         <CardContent className="pt-4 space-y-4">
           <div className="flex flex-col gap-2">
-            <Label>Assistant ID</Label>
+            <Label>{t.settings.assistantId}</Label>
             <Input
               value="cf71760a-d8aa-433f-859e-b28134532408"
               disabled
@@ -86,19 +88,19 @@ export default function SettingsPage() {
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Label>Provider</Label>
+            <Label>{t.settings.provider}</Label>
             <div className="flex items-center gap-2">
               <Badge>Vapi AI</Badge>
               <span className="text-xs text-muted-foreground">
-                Voice AI platform
+                {t.settings.voiceAiPlatform}
               </span>
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <Label>Status</Label>
+            <Label>{t.settings.statusLabel}</Label>
             <div className="flex items-center gap-2">
               <span className="inline-block size-2 rounded-full bg-green-400" />
-              <span className="text-sm">Active</span>
+              <span className="text-sm">{t.settings.statusActive}</span>
             </div>
           </div>
         </CardContent>
@@ -112,17 +114,17 @@ export default function SettingsPage() {
             ) : (
               <SunIcon className="size-4" />
             )}
-            <CardTitle className="text-base">Appearance</CardTitle>
+            <CardTitle className="text-base">{t.settings.appearance}</CardTitle>
           </div>
-          <CardDescription>Customize the look and feel.</CardDescription>
+          <CardDescription>{t.settings.appearanceDescription}</CardDescription>
         </CardHeader>
         <Separator />
         <CardContent className="pt-4 space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium">Dark Mode</p>
+              <p className="text-sm font-medium">{t.settings.darkMode}</p>
               <p className="text-xs text-muted-foreground">
-                Switch between light and dark theme.
+                {t.settings.darkModeDescription}
               </p>
             </div>
             <Switch

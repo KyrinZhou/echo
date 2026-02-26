@@ -10,18 +10,20 @@ import {
 } from "@workspace/ui/components/empty";
 import { LibraryBigIcon } from "lucide-react";
 import { CreateFileDialog } from "./create-file-dialog";
+import { useI18n } from "@/lib/i18n";
 
 export function FilesEmpty() {
+  const { t } = useI18n();
+
   return (
     <Empty className="flex-1">
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <LibraryBigIcon />
         </EmptyMedia>
-        <EmptyTitle>No knowledge base entries yet</EmptyTitle>
+        <EmptyTitle>{t.files.emptyTitle}</EmptyTitle>
         <EmptyDescription>
-          Add articles, FAQs, and documents to build your AI assistant&apos;s
-          knowledge base.
+          {t.files.emptyDescription}
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>

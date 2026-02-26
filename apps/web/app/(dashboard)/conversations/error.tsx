@@ -10,6 +10,7 @@ import {
   EmptyContent,
 } from "@workspace/ui/components/empty";
 import { AlertCircleIcon } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export default function ConversationsError({
   error,
@@ -18,14 +19,16 @@ export default function ConversationsError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const { t } = useI18n();
+
   return (
     <div className="flex flex-col gap-4 p-6 flex-1">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">
-          Conversations
+          {t.conversations.title}
         </h1>
         <p className="text-muted-foreground text-sm">
-          Manage your customer support conversations.
+          {t.conversations.description}
         </p>
       </div>
       <Empty className="flex-1">
@@ -33,15 +36,15 @@ export default function ConversationsError({
           <EmptyMedia variant="icon">
             <AlertCircleIcon />
           </EmptyMedia>
-          <EmptyTitle>Unable to load conversations</EmptyTitle>
+          <EmptyTitle>{t.conversations.unableToLoad}</EmptyTitle>
           <EmptyDescription>
             {error.message.includes("Could not find public function")
-              ? "The Convex backend functions have not been deployed yet. Please run 'npx convex dev' in the backend package to push the schema and functions."
+              ? t.conversations.convexNotDeployed
               : error.message}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button onClick={reset}>Try Again</Button>
+          <Button onClick={reset}>{t.common.tryAgain}</Button>
         </EmptyContent>
       </Empty>
     </div>

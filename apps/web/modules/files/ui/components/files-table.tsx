@@ -28,14 +28,21 @@ import {
   FileIcon,
 } from "lucide-react";
 import type { Doc } from "@workspace/backend/_generated/dataModel";
+import { useI18n } from "@/lib/i18n";
 
-const typeConfig = {
-  article: { label: "Article", icon: FileTextIcon, variant: "default" as const },
-  faq: { label: "FAQ", icon: HelpCircleIcon, variant: "secondary" as const },
-  document: { label: "Document", icon: FileIcon, variant: "outline" as const },
+const typeIcons = {
+  article: FileTextIcon,
+  faq: HelpCircleIcon,
+  document: FileIcon,
 };
 
-function formatTime(timestamp: number) {
+const typeVariants = {
+  article: "default" as const,
+  faq: "secondary" as const,
+  document: "outline" as const,
+};
+
+function formatTime(timestamp: number, translations: { yesterday: string; daysAgo: string }) {
   const date = new Date(timestamp);
   const now = new Date();
   const diff = now.getTime() - date.getTime();
@@ -44,8 +51,8 @@ function formatTime(timestamp: number) {
   if (days === 0) {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   }
-  if (days === 1) return "Yesterday";
-  if (days < 7) return `${days}d ago`;
+  if (days === 1) return translations.yesterday;
+  if (days < 7) return translations.daysAgo.replace("{days}", String(days));
   return date.toLocaleDateString([], { month: "short", day: "numeric" });
 }
 
@@ -54,25 +61,31 @@ interface FilesTableProps {
 }
 
 export function FilesTable({ files }: FilesTableProps) {
+  const { t } = useI18n();
   const archiveFile = useMutation(api.files.archive);
   const removeFile = useMutation(api.files.remove);
+
+  const typeLabels = {
+    article: t.files.article,
+    faq: t.files.faq,
+    document: t.files.document,
+  };
 
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Title</TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead>Description</TableHead>
-          <TableHead>Content Preview</TableHead>
-          <TableHead>Created</TableHead>
+          <TableHead>{t.files.titleLabel}</TableHead>
+          <TableHead>{t.files.type}</TableHead>
+          <TableHead>{t.files.descriptionLabel}</TableHead>
+          <TableHead>{t.files.contentPreview}</TableHead>
+          <TableHead>{t.files.createdAt}</TableHead>
           <TableHead className="w-[50px]" />
         </TableRow>
       </TableHeader>
       <TableBody>
         {files.map((file) => {
-          const config = typeConfig[file.type];
-          const TypeIcon = config.icon;
+          const TypeIcon = typeIcons[file.type];
           return (
             <TableRow key={file._id}>
               <TableCell>
@@ -84,11 +97,11 @@ export function FilesTable({ files }: FilesTableProps) {
                 </div>
               </TableCell>
               <TableCell>
-                <Badge variant={config.variant}>{config.label}</Badge>
+                <Badge variant={typeVariants[file.type]}>{typeLabels[file.type]}</Badge>
               </TableCell>
               <TableCell className="max-w-[200px]">
                 <span className="text-sm text-muted-foreground truncate block">
-                  {file.description || "—"}
+                  {file.description || t.common.noData}
                 </span>
               </TableCell>
               <TableCell className="max-w-[250px]">
@@ -98,7 +111,7 @@ export function FilesTable({ files }: FilesTableProps) {
                 </span>
               </TableCell>
               <TableCell className="text-muted-foreground text-sm">
-                {formatTime(file._creationTime)}
+                {formatTime(file._creationTime, { yesterday: t.common.yesterday, daysAgo: t.common.daysAgo })}
               </TableCell>
               <TableCell>
                 <DropdownMenu>
@@ -112,7 +125,7 @@ export function FilesTable({ files }: FilesTableProps) {
                       onClick={() => archiveFile({ id: file._id })}
                     >
                       <ArchiveIcon />
-                      Archive
+                      {t.files.archive}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
@@ -120,7 +133,7 @@ export function FilesTable({ files }: FilesTableProps) {
                       onClick={() => removeFile({ id: file._id })}
                     >
                       <TrashIcon />
-                      Delete
+                      {t.common.delete}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

@@ -13,10 +13,12 @@ import { FilesTable } from "../components/files-table";
 import { FilesEmpty } from "../components/files-empty";
 import { FilesLoading } from "../components/files-loading";
 import { CreateFileDialog } from "../components/create-file-dialog";
+import { useI18n } from "@/lib/i18n";
 
 type FileType = "article" | "faq" | "document";
 
 export function FilesView() {
+  const { t } = useI18n();
   const [tab, setTab] = useState<string>("all");
 
   const typeFilter: FileType | undefined =
@@ -41,10 +43,10 @@ export function FilesView() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
-            Knowledge Base
+            {t.files.title}
           </h1>
           <p className="text-muted-foreground text-sm">
-            Manage articles, FAQs, and documents for your AI assistant.
+            {t.files.description}
           </p>
         </div>
         <CreateFileDialog />
@@ -52,10 +54,10 @@ export function FilesView() {
 
       <Tabs value={tab} onValueChange={setTab}>
         <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="article">Articles</TabsTrigger>
-          <TabsTrigger value="faq">FAQs</TabsTrigger>
-          <TabsTrigger value="document">Documents</TabsTrigger>
+          <TabsTrigger value="all">{t.files.all}</TabsTrigger>
+          <TabsTrigger value="article">{t.files.articles}</TabsTrigger>
+          <TabsTrigger value="faq">{t.files.faqs}</TabsTrigger>
+          <TabsTrigger value="document">{t.files.documents}</TabsTrigger>
         </TabsList>
 
         <TabsContent value={tab}>

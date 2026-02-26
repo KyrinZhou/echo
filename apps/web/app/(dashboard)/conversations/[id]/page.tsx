@@ -25,9 +25,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useI18n } from "@/lib/i18n";
 
-function formatDuration(seconds?: number) {
-  if (!seconds) return "—";
+function formatDuration(seconds?: number, noData?: string) {
+  if (!seconds) return noData ?? "—";
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
   return `${m}:${String(s).padStart(2, "0")}`;
@@ -47,6 +48,7 @@ export default function ConversationDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const { t } = useI18n();
   const { id } = use(params);
   const router = useRouter();
   const conversation = useQuery(api.conversations.getById, {
@@ -70,11 +72,11 @@ export default function ConversationDetailPage({
   if (conversation === null) {
     return (
       <div className="flex flex-col items-center justify-center flex-1 gap-4 p-6">
-        <p className="text-muted-foreground">Conversation not found.</p>
+        <p className="text-muted-foreground">{t.conversationDetail.notFound}</p>
         <Button variant="outline" asChild>
           <Link href="/conversations">
             <ArrowLeftIcon className="size-4" />
-            Back to Conversations
+            {t.conversationDetail.backToConversations}
           </Link>
         </Button>
       </div>
@@ -93,7 +95,7 @@ export default function ConversationDetailPage({
           <h1 className="text-xl font-semibold tracking-tight">
             {conversation.title}
           </h1>
-          <p className="text-muted-foreground text-sm">Conversation details</p>
+          <p className="text-muted-foreground text-sm">{t.conversationDetail.subtitle}</p>
         </div>
         <div className="flex items-center gap-2">
           {conversation.status === "active" && (
@@ -110,7 +112,7 @@ export default function ConversationDetailPage({
               }}
             >
               <PhoneOffIcon className="size-3.5" />
-              End
+              {t.conversationDetail.end}
             </Button>
           )}
           <Button
@@ -123,7 +125,7 @@ export default function ConversationDetailPage({
             }}
           >
             <TrashIcon className="size-3.5" />
-            Delete
+            {t.common.delete}
           </Button>
         </div>
       </div>
@@ -131,7 +133,7 @@ export default function ConversationDetailPage({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle className="text-sm">Details</CardTitle>
+            <CardTitle className="text-sm">{t.conversationDetail.details}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center gap-3">
@@ -159,37 +161,37 @@ export default function ConversationDetailPage({
             <Separator />
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Status</span>
+                <span className="text-muted-foreground">{t.conversations.status}</span>
                 <Badge
                   variant={
                     conversation.status === "active" ? "default" : "secondary"
                   }
                 >
-                  {conversation.status === "active" ? "Active" : "Ended"}
+                  {conversation.status === "active" ? t.common.active : t.common.ended}
                 </Badge>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground flex items-center gap-1.5">
-                  <ClockIcon className="size-3.5" /> Duration
+                  <ClockIcon className="size-3.5" /> {t.conversations.duration}
                 </span>
-                <span>{formatDuration(conversation.duration)}</span>
+                <span>{formatDuration(conversation.duration, t.common.noData)}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Created</span>
+                <span className="text-muted-foreground">{t.conversationDetail.created}</span>
                 <span className="text-xs">
                   {formatDate(conversation._creationTime)}
                 </span>
               </div>
               {conversation.endedAt && (
                 <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Ended</span>
+                  <span className="text-muted-foreground">{t.common.ended}</span>
                   <span className="text-xs">
                     {formatDate(conversation.endedAt)}
                   </span>
                 </div>
               )}
               <div className="flex items-center justify-between">
-                <span className="text-muted-foreground">Messages</span>
+                <span className="text-muted-foreground">{t.conversationDetail.messages}</span>
                 <span>{messages.length}</span>
               </div>
             </div>
@@ -199,7 +201,7 @@ export default function ConversationDetailPage({
         <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="text-sm">
-              Messages ({messages.length})
+              {t.conversationDetail.messages} ({messages.length})
             </CardTitle>
           </CardHeader>
           <Separator />
@@ -209,7 +211,7 @@ export default function ConversationDetailPage({
                 {messages.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-[400px] gap-2 text-center">
                     <p className="text-sm text-muted-foreground">
-                      No messages in this conversation yet.
+                      {t.conversationDetail.noMessages}
                     </p>
                   </div>
                 ) : (

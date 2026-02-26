@@ -25,6 +25,7 @@ import {
 import Link from "next/link";
 import { CreateConversationDialog } from "@/modules/conversations/ui/components/create-conversation-dialog";
 import { CreateFileDialog } from "@/modules/files/ui/components/create-file-dialog";
+import { useI18n } from "@/lib/i18n";
 
 function formatDuration(seconds: number) {
   const m = Math.floor(seconds / 60);
@@ -32,15 +33,15 @@ function formatDuration(seconds: number) {
   return `${m}m ${s}s`;
 }
 
-function formatTime(timestamp: number) {
+function formatTime(timestamp: number, translations: { yesterday: string; daysAgo: string }) {
   const date = new Date(timestamp);
   const now = new Date();
   const diff = now.getTime() - date.getTime();
   const days = Math.floor(diff / 86400000);
   if (days === 0)
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  if (days === 1) return "Yesterday";
-  if (days < 7) return `${days}d ago`;
+  if (days === 1) return translations.yesterday;
+  if (days < 7) return translations.daysAgo.replace("{days}", String(days));
   return date.toLocaleDateString([], { month: "short", day: "numeric" });
 }
 
@@ -71,43 +72,44 @@ function StatsLoading() {
 }
 
 export function DashboardView() {
+  const { t } = useI18n();
   const stats = useQuery(api.stats.overview);
 
   if (stats === undefined) return <StatsLoading />;
 
   const statCards = [
     {
-      title: "Total Conversations",
+      title: t.dashboard.totalConversations,
       value: stats.totalConversations,
       icon: InboxIcon,
-      description: "All time",
+      description: t.dashboard.allTime,
     },
     {
-      title: "Active Calls",
+      title: t.dashboard.activeCalls,
       value: stats.activeConversations,
       icon: PhoneIcon,
-      description: "Currently active",
+      description: t.dashboard.currentlyActive,
     },
     {
-      title: "Knowledge Base",
+      title: t.dashboard.knowledgeBaseLabel,
       value: stats.knowledgeBaseEntries,
       icon: LibraryBigIcon,
-      description: "Active entries",
+      description: t.dashboard.activeEntries,
     },
     {
-      title: "Avg Duration",
-      value: stats.avgDuration > 0 ? formatDuration(stats.avgDuration) : "—",
+      title: t.dashboard.avgDuration,
+      value: stats.avgDuration > 0 ? formatDuration(stats.avgDuration) : t.common.noData,
       icon: ClockIcon,
-      description: "Per conversation",
+      description: t.dashboard.perConversation,
     },
   ];
 
   return (
     <div className="flex flex-col gap-6 p-6 flex-1">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t.dashboard.title}</h1>
         <p className="text-muted-foreground text-sm">
-          Overview of your customer support operations.
+          {t.dashboard.description}
         </p>
       </div>
 
@@ -134,10 +136,10 @@ export function DashboardView() {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base">Recent Conversations</CardTitle>
+              <CardTitle className="text-base">{t.dashboard.recentConversations}</CardTitle>
               <Button variant="ghost" size="sm" asChild>
                 <Link href="/conversations">
-                  View all
+                  {t.common.viewAll}
                   <ArrowRightIcon className="size-3.5" />
                 </Link>
               </Button>
@@ -148,7 +150,7 @@ export function DashboardView() {
             {stats.recentConversations.length === 0 ? (
               <div className="flex flex-col items-center gap-3 py-8 text-center">
                 <p className="text-sm text-muted-foreground">
-                  No conversations yet
+                  {t.dashboard.noConversationsYet}
                 </p>
                 <CreateConversationDialog />
               </div>
@@ -179,10 +181,10 @@ export function DashboardView() {
                         }
                         className="text-[10px]"
                       >
-                        {conv.status === "active" ? "Active" : "Ended"}
+                        {conv.status === "active" ? t.common.active : t.common.ended}
                       </Badge>
                       <span className="text-xs text-muted-foreground">
-                        {formatTime(conv._creationTime)}
+                        {formatTime(conv._creationTime, { yesterday: t.common.yesterday, daysAgo: t.common.daysAgo })}
                       </span>
                     </div>
                   </div>
@@ -195,7 +197,7 @@ export function DashboardView() {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base">Quick Actions</CardTitle>
+              <CardTitle className="text-base">{t.dashboard.quickActions}</CardTitle>
             </div>
           </CardHeader>
           <Separator />
@@ -205,7 +207,7 @@ export function DashboardView() {
               <CreateFileDialog />
               <Button variant="outline" asChild>
                 <Link href="/settings">
-                  Open Settings
+                  {t.dashboard.openSettings}
                   <ArrowRightIcon className="size-3.5" />
                 </Link>
               </Button>

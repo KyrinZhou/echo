@@ -28,15 +28,16 @@ import {
   ClockIcon,
 } from "lucide-react";
 import type { Doc } from "@workspace/backend/_generated/dataModel";
+import { useI18n } from "@/lib/i18n";
 
-function formatDuration(seconds?: number) {
-  if (!seconds) return "—";
+function formatDuration(seconds?: number, noData?: string) {
+  if (!seconds) return noData ?? "—";
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
-function formatTime(timestamp: number) {
+function formatTime(timestamp: number, translations: { yesterday: string; daysAgo: string }) {
   const date = new Date(timestamp);
   const now = new Date();
   const diff = now.getTime() - date.getTime();
@@ -45,8 +46,8 @@ function formatTime(timestamp: number) {
   if (days === 0) {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   }
-  if (days === 1) return "Yesterday";
-  if (days < 7) return `${days}d ago`;
+  if (days === 1) return translations.yesterday;
+  if (days < 7) return translations.daysAgo.replace("{days}", String(days));
   return date.toLocaleDateString([], { month: "short", day: "numeric" });
 }
 
@@ -66,6 +67,7 @@ interface ConversationsTableProps {
 export function ConversationsTable({
   conversations,
 }: ConversationsTableProps) {
+  const { t } = useI18n();
   const router = useRouter();
   const endConversation = useMutation(api.conversations.end);
   const removeConversation = useMutation(api.conversations.remove);
@@ -74,12 +76,12 @@ export function ConversationsTable({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Customer</TableHead>
-          <TableHead>Title</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Duration</TableHead>
-          <TableHead>Last Message</TableHead>
-          <TableHead>Time</TableHead>
+          <TableHead>{t.conversations.customer}</TableHead>
+          <TableHead>{t.conversations.titleLabel}</TableHead>
+          <TableHead>{t.conversations.status}</TableHead>
+          <TableHead>{t.conversations.duration}</TableHead>
+          <TableHead>{t.conversations.lastMessage}</TableHead>
+          <TableHead>{t.conversations.time}</TableHead>
           <TableHead className="w-[50px]" />
         </TableRow>
       </TableHeader>
@@ -118,24 +120,24 @@ export function ConversationsTable({
                   conversation.status === "active" ? "default" : "secondary"
                 }
               >
-                {conversation.status === "active" ? "Active" : "Ended"}
+                {conversation.status === "active" ? t.common.active : t.common.ended}
               </Badge>
             </TableCell>
             <TableCell>
               <div className="flex items-center gap-1 text-muted-foreground">
                 <ClockIcon className="size-3" />
                 <span className="text-sm">
-                  {formatDuration(conversation.duration)}
+                  {formatDuration(conversation.duration, t.common.noData)}
                 </span>
               </div>
             </TableCell>
             <TableCell className="max-w-[200px]">
               <span className="text-sm text-muted-foreground truncate block">
-                {conversation.lastMessage || "No messages yet"}
+                {conversation.lastMessage || t.common.noMessagesYet}
               </span>
             </TableCell>
             <TableCell className="text-muted-foreground text-sm">
-              {formatTime(conversation._creationTime)}
+              {formatTime(conversation._creationTime, { yesterday: t.common.yesterday, daysAgo: t.common.daysAgo })}
             </TableCell>
             <TableCell>
               <DropdownMenu>
@@ -157,7 +159,7 @@ export function ConversationsTable({
                       }
                     >
                       <PhoneOffIcon />
-                      End Conversation
+                      {t.conversations.endConversation}
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuSeparator />
@@ -168,7 +170,7 @@ export function ConversationsTable({
                     }
                   >
                     <TrashIcon />
-                    Delete
+                    {t.common.delete}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
