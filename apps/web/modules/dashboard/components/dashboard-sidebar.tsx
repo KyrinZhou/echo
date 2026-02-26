@@ -11,40 +11,38 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
   SidebarGroupLabel,
   SidebarGroupContent,
 } from "@workspace/ui/components/sidebar";
-import { InboxIcon, LibraryBigIcon } from "lucide-react";
+import {
+  LayoutDashboardIcon,
+  InboxIcon,
+  LibraryBigIcon,
+  SettingsIcon,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export const DashboardSidebar = () => {
-  const customeSupportItems = [
-    {
-      title: "Conversations",
-      url: "/conversations",
-      icon: InboxIcon,
-      badge: "12",
-    },
-    {
-      title: "Knowledge Base",
-      url: "/files",
-      icon: LibraryBigIcon,
-      badge: "12",
-    },
-  ];
   const pathname = usePathname();
 
   const isActive = (url: string) => {
-    if (url === "/") {
-      return pathname === "/";
-    }
-
+    if (url === "/") return pathname === "/";
     return pathname.startsWith(url);
   };
+
+  const mainItems = [
+    { title: "Dashboard", url: "/", icon: LayoutDashboardIcon },
+  ];
+
+  const supportItems = [
+    { title: "Conversations", url: "/conversations", icon: InboxIcon },
+    { title: "Knowledge Base", url: "/files", icon: LibraryBigIcon },
+  ];
+
+  const bottomItems = [
+    { title: "Settings", url: "/settings", icon: SettingsIcon },
+  ];
 
   return (
     <Sidebar className="group" collapsible="icon">
@@ -77,9 +75,47 @@ export const DashboardSidebar = () => {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Custom Support</SidebarGroupLabel>
           <SidebarGroupContent>
-            {customeSupportItems.map((item) => (
+            {mainItems.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton
+                  asChild
+                  tooltip={item.title}
+                  isActive={isActive(item.url)}
+                >
+                  <Link href={item.url}>
+                    <item.icon className="size-4" />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Customer Support</SidebarGroupLabel>
+          <SidebarGroupContent>
+            {supportItems.map((item) => (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton
+                  asChild
+                  tooltip={item.title}
+                  isActive={isActive(item.url)}
+                >
+                  <Link href={item.url}>
+                    <item.icon className="size-4" />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupContent>
+            {bottomItems.map((item) => (
               <SidebarMenuItem key={item.title}>
                 <SidebarMenuButton
                   asChild
@@ -96,6 +132,7 @@ export const DashboardSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>

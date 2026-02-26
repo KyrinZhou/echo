@@ -1,6 +1,7 @@
 "use client";
 
 import { useMutation } from "convex/react";
+import { useRouter } from "next/navigation";
 import { api } from "@workspace/backend/_generated/api";
 import {
   Table,
@@ -65,6 +66,7 @@ interface ConversationsTableProps {
 export function ConversationsTable({
   conversations,
 }: ConversationsTableProps) {
+  const router = useRouter();
   const endConversation = useMutation(api.conversations.end);
   const removeConversation = useMutation(api.conversations.remove);
 
@@ -83,7 +85,11 @@ export function ConversationsTable({
       </TableHeader>
       <TableBody>
         {conversations.map((conversation) => (
-          <TableRow key={conversation._id}>
+          <TableRow
+            key={conversation._id}
+            className="cursor-pointer"
+            onClick={() => router.push(`/conversations/${conversation._id}`)}
+          >
             <TableCell>
               <div className="flex items-center gap-3">
                 <Avatar className="size-8">
