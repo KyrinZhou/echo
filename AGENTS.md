@@ -50,3 +50,12 @@ printf 'NEXT_PUBLIC_CONVEX_URL=%s\n' "$NEXT_PUBLIC_CONVEX_URL" > apps/widget/.en
 - **Root URL redirects**: The web app's Clerk middleware protects all routes except `/sign-in` and `/sign-up`. Unauthenticated requests to `/` redirect to `/sign-in`.
 - **Sentry build warning**: The web build may warn about missing `SENTRY_AUTH_TOKEN` for source map uploads. This is non-blocking; set `SENTRY_AUTH_TOKEN=""` to suppress if needed.
 - **Stale `.next` cache after builds**: Running `pnpm --filter web build` (production build) then `pnpm --filter web dev` can cause `Cannot find module './vendor-chunks/...'` errors because the dev server picks up stale production webpack chunks. Fix: `rm -rf apps/web/.next` before restarting the dev server.
+- **Shell env overrides `.env.local`**: Next.js resolves `NEXT_PUBLIC_*` env vars with shell env taking precedence over `.env.local`. When Cursor Cloud secrets inject `NEXT_PUBLIC_CONVEX_URL` (pointing to cloud), use `env -u NEXT_PUBLIC_CONVEX_URL pnpm --filter web dev` to unset it and let `.env.local` take effect for local Convex development.
+
+### Vercel deployment
+
+- **Production URL**: `https://echo-web-gamma.vercel.app`
+- **Auto-deploys**: The `echo-web` and `echo-widget` projects auto-deploy from GitHub pushes (preview on branches, production on main merge).
+- **Promote preview to production**: `vercel promote <preview-url> --yes --token "$VERCEL_TOKEN" --scope kyrinzhous-projects`
+- **Required env vars on Vercel**: `NEXT_PUBLIC_CONVEX_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY` (already configured on the existing project).
+- **Widget build on Vercel**: The root `turbo build` builds both web and widget. The widget requires `NEXT_PUBLIC_CONVEX_URL` at build time. Ensure this env var is set in the Vercel project settings for both apps.
