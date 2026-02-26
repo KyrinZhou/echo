@@ -19,6 +19,7 @@ import {
   InboxIcon,
   LibraryBigIcon,
   SettingsIcon,
+  GlobeIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -26,7 +27,7 @@ import { useI18n } from "@/lib/i18n";
 
 export const DashboardSidebar = () => {
   const pathname = usePathname();
-  const { t } = useI18n();
+  const { t, locale, setLocale } = useI18n();
 
   const isActive = (url: string) => {
     if (url === "/") return pathname === "/";
@@ -137,6 +138,15 @@ export const DashboardSidebar = () => {
 
       <SidebarFooter>
         <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              tooltip={locale === "en" ? "切换到中文" : "Switch to English"}
+              onClick={() => setLocale(locale === "en" ? "zh" : "en")}
+            >
+              <GlobeIcon className="size-4" />
+              <span>{locale === "en" ? "中文" : "EN"}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild size="lg">
               <UserButton
