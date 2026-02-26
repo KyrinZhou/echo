@@ -40,6 +40,8 @@ export const useVapi = () => {
 
     vapiInstance.on("message", (message) => {
       if (message.type === "transcript" && message.transcriptType === "final") {
+        setIsConnected(true);
+        setIsConecting(false);
         setTranscript((prev) => [
           ...prev,
           {
